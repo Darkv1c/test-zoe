@@ -20,6 +20,7 @@
       "@/*": ["./src/*"],
       "styles/*": ["./src/assets/styles/*"],
       "images/*": ["./src/assets/images/*"],
+      "icons": ["./src/assets/icons"],
       "store": ["./src/store/index.ts"],
       "actions/*": ["./src/store/actions/*"]
     }

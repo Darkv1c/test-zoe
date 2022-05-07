@@ -12,6 +12,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       'styles': path.resolve(__dirname, './src/assets/styles'),
       'images': path.resolve(__dirname, './src/assets/images'),
+      'icons': path.resolve(__dirname, './src/assets/icons/index.ts'),
       'store': path.resolve(__dirname, './src/store/index.ts'),
       'actions': path.resolve(__dirname, './src/store/actions')
     }

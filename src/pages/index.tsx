@@ -1,62 +1,112 @@
-import { useEffect, useState } from "react"
-import { getAgents } from 'actions/agents'
 import styled from 'styled-components'
-import { IAgent } from './types'
+import { Input, Navbar } from "@/components"
+import { group, currency } from 'icons'
+import Button from '@/components/Button'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router'
+import { breakPoints } from 'styles/constants'
 
-function Index() {  
-    const [agents, setAgents]:[IAgent[], Function] = useState([])
-    const [results, setResults]:[IAgent[], Function] = useState([])
-    const [inputValue, setInputValue]:[number | null, Function] = useState(null)
-    const [message, setMessage]:[string, Function] = useState('')    
-    const [page, setPage]:[number, Function] = useState(1)    
-    const range:number = 10000
+function Index() {
+    const navigate = useNavigate()
+    const [inputValue, setInputValue]: [number | null, Function] = useState(null)
+    const [error, setError]: [string, Function] = useState('')
 
-
-    function setInput(e:any){
-        setInputValue(e.target.value)
+    function setValue(e: React.FormEvent<HTMLInputElement>) {
+        setInputValue(Number(e.currentTarget.value))
     }
-    function search(){
-        let res = []
-        setMessage('')
-        if (inputValue?.toString().length !== 5) return setMessage('please enter a 5 digits income')
-        res = agents.filter(agent => (agent.income < Number(inputValue) + range) && (agent.income > Number(inputValue) - range))
-        setResults(res)
+    function search() {
+        setError('')
+        if (inputValue?.toString().length !== 5) return setError('The income must have 5 digits')
+        navigate('/results?income=' + inputValue)
     }
 
-    function seeLess(){
-        if (page > 1) setPage(page - 1)
-    }
-    function seeMore(){
-        if (page < agents.length / 3) setPage(page + 1)
-    }
-    
-    useEffect(() => {         
-        getAgents('./agent-list.json', function(data:IAgent[]){
-            setAgents(data)
-        });
-     }, [])
-
-    return <Container>
-        <input type="number" onChange={setInput}></input>
-        <span onClick={search}>MATCH</span>
-        <span>{message}</span>
-        <ul>
-            {results.map((elem, n) => {
-                if (n < page * 3){
-                    return <li key={'income' + n}>{elem.income}</li>
-                } 
-            })}
-        </ul>
-        <span onClick={seeMore}>see more  </span><br></br>
-        <span onClick={seeLess}> see less </span>
-    </Container>
+    return (
+        <Container>
+            <Navbar />
+            <div className='content'>
+                <img src={group} alt='group icon' />
+                <span className='title'>Find the best agent for you</span>
+                <span className='subtitle'>Fill the information below to get your matches.</span>
+                <div className='search-section'>
+                    <span className='paragraph'>Current income</span>
+                    <Input icon={currency} type='number' onChange={setValue} error={error} />
+                    <Button className='search-button' onClick={search}>
+                        <span>Get matches</span>
+                        <i className="fa-solid fa-arrow-right"></i>
+                    </Button>
+                </div>
+            </div>
+        </Container>
+    )
 }
 
 export default Index
 
 //#region styles
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+max-width: 100vw;
+overflow: hidden;
+text-align: center;
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    box-sizing: border-box;
+    padding: 32px;
+    
+    animation-name: appear;
+    animation-delay: 0.5s;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    .title{
+        margin-bottom: 16px;
+    }
+    img[alt='group icon']{
+        width: 5.625rem;
+        height: 3.938rem;
+        margin-bottom: 24.5px;
+    }
+    .search-section{
+        display: flex;
+        flex-direction: column;
+        margin-top: 56px;
+        width: 20rem;
+        .paragraph{
+            margin-bottom: 9px;
+            text-align: start;
+        }
+    }
+    .search-button{
+        margin-top: 40px;
+        margin-left: auto;
+    }
+}
+
+@media screen and (max-width: ${breakPoints.phone}) {
+    .search-button {
+        min-width: 100%;
+        span{
+            margin-left: auto;
+        }
+        i{
+            margin-left: auto;
+        }
+    }
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 `
 //#endregion
