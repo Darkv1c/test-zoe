@@ -1,10 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
-import character from './character'
 
 export const store = configureStore({
   reducer: {
-      character
   },
 })
 

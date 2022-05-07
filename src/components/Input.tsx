@@ -18,8 +18,8 @@ export default Input
 
 //#region styles
 const Component = styled.div<props>`
+    text-align: left;
     .input{
-
         display: flex;
         justify-content: center;
         align-items: center;
@@ -60,6 +60,7 @@ const Component = styled.div<props>`
     }
     small{
         color: red;
+        margin-right: auto;
     }
 `
 //#endregion

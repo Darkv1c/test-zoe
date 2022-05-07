@@ -19,7 +19,7 @@ export default styled.div`
         display: flex;
         letter-spacing: -0.01em;
 
-        color: ${colors.texts.header}; 
+        color: ${colors.texts.header};
     }
     .paragraph{
         font-weight: 400;

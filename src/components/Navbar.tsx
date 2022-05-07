@@ -1,9 +1,17 @@
 import styled from "styled-components"
 import Logo from "images/logo.png"
+import { useNavigate } from "react-router"
+import { breakPoints } from "@/assets/styles/constants"
 
 function Navbar() {
+    const navigate = useNavigate()
+
+    function goHome(){
+        navigate('/')
+    }
+
     return <Container>
-        <img src={Logo} alt="Logo" />
+        <img src={Logo} alt="Logo" onClick={goHome}/>
     </Container>
 }
 
@@ -23,6 +31,16 @@ const Container = styled.div`
     img[alt='Logo']{
         width: 5.473rem;
         height: 2.613rem;
+        cursor: pointer;
+    }
+    
+    @media screen and (width: ${breakPoints.phone}){
+        height: 3rem;        
+        img[alt='Logo']{
+            width: 4.616rem;
+            height: 2rem;
+            cursor: pointer;
+        }
     }
 `
 //#endregion

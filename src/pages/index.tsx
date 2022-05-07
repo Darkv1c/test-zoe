@@ -59,6 +59,8 @@ text-align: center;
     flex: 1;
     box-sizing: border-box;
     padding: 32px;
+
+    opacity: 0;
     
     animation-name: appear;
     animation-delay: 0.5s;

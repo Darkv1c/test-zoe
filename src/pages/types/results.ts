@@ -1,4 +1,4 @@
-export interface IAgent{
+export type agent = {
     "id": number,
     "name": string,
     "avatar": string,
