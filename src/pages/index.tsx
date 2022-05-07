@@ -77,6 +77,7 @@ text-align: center;
         flex-direction: column;
         margin-top: 56px;
         width: 20rem;
+        max-width: 100%;
         .paragraph{
             margin-bottom: 9px;
             text-align: start;
