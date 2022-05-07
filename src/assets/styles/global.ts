@@ -11,6 +11,11 @@ export default styled.div`
 
         color: rgb(${colors.texts.header});
     }
+    .title-2{
+        font-weight: 700;
+        font-size: 1.25rem;
+        line-height: 1.438rem;
+    }
     .subtitle{
         font-weight: 400;
         font-size: 1rem;

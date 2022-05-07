@@ -9,7 +9,7 @@ function Dropdown ({ label, options, onChange }:props) {
     
     function handleChange(option: typeof options[0]){
         setSelectLabel(option.label)
-        onChange()
+        onChange(option)
     }
 
     return (
@@ -20,7 +20,7 @@ function Dropdown ({ label, options, onChange }:props) {
                 {selectLabel}
                 <i className="fa-solid fa-chevron-down"></i>
                 <div className="options" >
-                    {options.map((option, n) => <span key={'option' + n} onClick={() => handleChange(option)}>{option.label}</span>)}
+                    {options.map((option, n) => <span key={'option' + n} onClick={() => handleChange(option)}>{option.label}</span>)}  
                 </div>
             </span>
         </Container>
@@ -82,21 +82,23 @@ export default Dropdown
                 flex-direction: column;
                 align-items: flex-start;
                 
-                padding-top: 2.875rem;                
+                padding-top: 2.875rem;
                 border: 1px solid rgba(220, 220, 220, 1);
                 border-radius: 4px;
                 box-shadow: ${props => props.isOpen && '0px 8px 16px rgba(29, 35, 58, 0.1)'};
                 width: 100%;
 
+                
                 transform: ${props => props.isOpen ? 'scaleY(100%)' : 'scaleY(0)'};
                 transform-origin: 0 0;
                 transition: all 0.2s ease;
-
+                
                 span{
                     box-sizing: border-box;
                     padding: 15px 20px;
                     width: 100%;
 
+                    background-color: white;
                     :hover{
                         background-color: #5C7BEB;
                         color: white;
