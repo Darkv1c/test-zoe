@@ -11,7 +11,7 @@ function Card({ agent, onClick }:props) {
 
     return (
     <Container onClick={handleClick}>
-        <img src="https://www.carlosjimenez.info/wp-content/uploads//2013/10/person.jpg" alt="card image" />
+        <img src={agent.avatar} alt="card image" />
         <div className="info">
             <span className="title-2">{agent.name}</span>
             <span>ID: {agent.id}</span>
