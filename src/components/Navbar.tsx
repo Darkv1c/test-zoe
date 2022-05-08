@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from "styled-components"
 import Logo from "images/logo.png"
 import { useNavigate } from "react-router"

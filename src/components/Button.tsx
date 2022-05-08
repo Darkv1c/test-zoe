@@ -1,3 +1,4 @@
+import React from 'react'
 import { colors } from "@/assets/styles/constants"
 import styled from "styled-components"
 import { props } from "./types/Button"

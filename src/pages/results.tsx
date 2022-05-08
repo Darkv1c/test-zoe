@@ -1,34 +1,41 @@
+import React from 'react'
 import { breakPoints, colors } from "@/assets/styles/constants"
 import { Navbar, Dropdown, Card } from "@/components"
 import Button from "@/components/Button"
 import { formatPrice } from "@/utilities/currency"
-import { getAgents } from "actions/agents"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
-import { Navigate, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import styled from "styled-components"
 import { agent } from "../types/results"
+import axios from 'axios'
 
 function Results() {
     const [searchParams] = useSearchParams()
+    const [isLoading, setIsLoading]: [boolean, Function] = useState(true)
     const [agents, setAgents]: [agent[] | [], Function] = useState([])
     const [hiddenAgents, setHiddenAgents]: [agent[] | [], Function] = useState([])
     const [page, setPage]: [number, Function] = useState(0)
+
     const navigate = useNavigate()
-    const [nameAZ, id, incomeAscending, incomeDescending ] = [0, 1, 2, 3]
+    const [nameAZ, id, incomeAscending, incomeDescending] = [0, 1, 2, 3]
     const income = Number(searchParams.get('income'))
     const range = 10000
     const orderOptions = [
         { label: 'Name (A-Z)', value: nameAZ },
         { label: 'ID', value: id },
         { label: 'Income: High first', value: incomeAscending },
-        { label: 'Income: Low first', value: incomeDescending},
+        { label: 'Income: Low first', value: incomeDescending },
     ]
 
     useEffect(() => {
-        getAgents('./agent-list.json', (data: agent[]) => 
-            setAgents(data.filter((agent:agent) => agent.income < income + range && agent.income > income - range))
-        )
+        axios.get('./agent-list.json')
+            .then(({data}) => {
+                setAgents(
+                    (data as agent[]).filter((agent: agent) => agent.income < income + range && agent.income > income - range)
+                )
+                setIsLoading(false)
+            })
     }, [])
 
     function price(price: string) {
@@ -36,21 +43,21 @@ function Results() {
     }
 
     function handleChange(option: { label: string, value: string | number }) {
-        if (option.value == nameAZ) setAgents([...agents].sort((a:agent, b:agent) => a.name > b.name ? 1 : -1))
-        if (option.value == id) setAgents([...agents].sort((a:agent, b:agent) => a.id > b.id ? 1 : -1))
-        if (option.value == incomeAscending) setAgents([...agents].sort((a:agent, b:agent) => a.income < b.income ? 1 : -1))
-        if (option.value == incomeDescending) setAgents([...agents].sort((a:agent, b:agent) => a.income > b.income ? 1 : -1))
+        if (option.value == nameAZ) setAgents([...agents].sort((a: agent, b: agent) => a.name > b.name ? 1 : -1))
+        if (option.value == id) setAgents([...agents].sort((a: agent, b: agent) => a.id > b.id ? 1 : -1))
+        if (option.value == incomeAscending) setAgents([...agents].sort((a: agent, b: agent) => a.income < b.income ? 1 : -1))
+        if (option.value == incomeDescending) setAgents([...agents].sort((a: agent, b: agent) => a.income > b.income ? 1 : -1))
     }
 
     function handleClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>, agent: agent) {
-        const target = e.currentTarget 
+        const target = e.currentTarget
         target.style.transform = 'scale(0)'
         setTimeout(() => {
             target.style.display = 'none'
-        } , 400)
+        }, 400)
         setHiddenAgents([...hiddenAgents, agent])
     }
-    function changePage(operator:number){
+    function changePage(operator: number) {
         if (operator > 0 && page + operator < Math.ceil(agents.length / 3)) return setPage(page + operator)
         if (operator < 0 && page + operator >= 0) return setPage(page + operator)
     }
@@ -65,23 +72,25 @@ function Results() {
                     <Dropdown label="Order agents by" options={orderOptions} onChange={handleChange} />
                 </div>
                 <div className="card-list">
-                    {agents.map((agent, n) => 
-                    n < (page + 1) *3 ? <Card key={'agent-' + n} agent={agent} onClick={(e) => handleClick(e, agent)} /> : undefined
+                    {agents.map((agent, n) =>
+                        n < (page + 1) * 3 ? <Card key={'agent-' + n} agent={agent} onClick={(e) => handleClick(e, agent)} /> : undefined
                     )}
                 </div>
                 <div className="buttons">
-                    <span onClick={() => changePage(-1)}>Show less -</span>
-                    <span onClick={() => changePage(1)}>Show more +</span>
+                    <span id='show-more' onClick={() => changePage(-1)}>Show less -</span>
+                    <span id='show-less' onClick={() => changePage(1)}>Show more +</span>
                 </div>
-            </div> :
-            <div className="no-results">
-                <span className="title">Sorry, no results found</span>
-                <span className="subtitle 2">Your income: &nbsp;<b>${price(income.toString() || '')}</b></span>
-                <Button className='search-button' onClick={() => navigate('/')}>
+            </div> : !isLoading ?
+                <div className="no-results">
+                    <span className="title">No
+                        available agents based on your income. Please try a different income value.</span>
+                    <span className="subtitle 2">Your income: &nbsp;<b>${price(income.toString() || '')}</b></span>
+                    <Button className='search-button' onClick={() => navigate('/')}>
                         <i className="fa-solid fa-arrow-left"></i>
                         <span>Search again</span>
-                </Button>
-            </div>
+                    </Button>
+                </div> :
+                <div>Loading...</div>
             }
         </Container>
     )
@@ -90,7 +99,7 @@ function Results() {
 export default Results
 
 //#region styles 
-const Container = styled.div<{page: number, lastPage: number}>`
+const Container = styled.div<{ page: number, lastPage: number }>`
     .content, .no-results{
         display: flex;
         flex-direction: column;
@@ -134,7 +143,7 @@ const Container = styled.div<{page: number, lastPage: number}>`
             cursor: pointer;
         }
         span:nth-child(2){
-            color: ${props => props.page < props.lastPage ? `rgb(${colors.interaction.blue03})`: `rgb(${colors.texts.disbled})`};
+            color: ${props => props.page < props.lastPage ? `rgb(${colors.interaction.blue03})` : `rgb(${colors.texts.disbled})`};
 
             cursor: pointer;
         }
