@@ -10,9 +10,11 @@ function Navbar() {
         navigate('/')
     }
 
-    return <Container>
-        <img src={Logo} alt="Logo" onClick={goHome}/>
-    </Container>
+    return (
+        <Container>
+            <img src={Logo} alt="Logo" onClick={goHome}/>
+        </Container>
+    )
 }
 
 export default Navbar
@@ -20,6 +22,8 @@ export default Navbar
 //#region style
 const Container = styled.div`
     position: sticky;
+    top: 0;
+    z-index: 100;
 
     display: flex;
     align-items: center;

@@ -1,6 +1,7 @@
 const texts = {
     header: '63, 62, 58',
-    paragraph: '95, 95, 95'
+    paragraph: '95, 95, 95',
+    disbled: '180, 180, 180'
 }
 const interaction = {
     blue03: '92, 123, 235'
